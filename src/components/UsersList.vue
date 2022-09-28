@@ -3,13 +3,12 @@
     <h1>{{ constants.metaData.listHeading }}</h1>
     <div class="list">
       <article v-for="(user, index) in filteredUsersList"
-      :key="'user'+index"
-      @click="navigateToDetails(user.login)" tabindex="6">
+      :key="'user'+index" tabindex="6">
         <img v-if="user.avatar_url" class="user-image" :src=user.avatar_url :alt=user.login height=250 width=250/>
         <img v-else class="user-image" src="../assets/duck.svg" alt=user.login height=250 width=250/>
-        <div class="user-name">{{ user.login }}</div>
-        <a class="github-link">
-          <img src="../assets/attachment.svg" alt="go to details" />
+        <div @click="navigateToDetails(user.login)" class="user-name">{{ user.login }}</div>
+        <a class="github-link" :href=user.html_url target="_blank">
+          <img src="../assets/attachment.svg" alt="go to github repo" />
           {{ constants.metaData.githubList }}
         </a>
       </article>
@@ -26,28 +25,25 @@
   export default {
     data: () => {
       return {
-        constants,
-        //usersSearchQuery: window.localStorage.getItem("usersSearchQuery") || "",
+        constants
       }
     },
     computed: {
       filteredUsersList() {
         let filterUsersList = this.usersList;
 
-        // same this values to localstorage to be persistent for browser refresh -- alternate vuex-persistedstate
-        window.localStorage.setItem("usersSearchQuery", this.usersSearchQuery);
-
         // search users by name
-        //if (this.usersSearchQuery) {
-          //filterUsersList = filterUsersList.filter((user) => {
-           // return user.name.toLowerCase().includes(this.usersSearchQuery.toLowerCase());
-         //});
-       // }
+        if (this.searchQuery) {
+          filterUsersList = filterUsersList.filter((user) => {
+            return user.login.toLowerCase().includes(this.searchQuery.toLowerCase());
+         });
+        }
 
         return filterUsersList;
       },
       ...mapState("UsersStore", [
-        "usersList"
+        "usersList",
+        "searchQuery"
       ])
     },
     methods: {
@@ -95,11 +91,17 @@
           color: #000000;
           margin-top: 16px;
           font-weight: bold;
+          cursor: pointer;
         }
         .github-link {
           font-size: 12px;
           color: #54A3FF;
           cursor: pointer;
+          text-decoration: none;
+          img {
+            position: relative;
+            top: 5px;
+          }
         }
       }
     }

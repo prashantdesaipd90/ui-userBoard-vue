@@ -6,14 +6,14 @@ const USERS_LIST_API = constants.githubUserURL;
 export default {
   axios,
   fetchUsersList() {
-    return axios.get(USERS_LIST_API);
+    return axios.get(USERS_LIST_API + "?per_page=15");
   },
 
   fetchUsersDetails(username) {
-    return axios.get("https://api.github.com/users/" + username);
+    return axios.get(USERS_LIST_API + "/" + username);
   },
 
   fetchUsersRepos(username) {
-    return axios.get("https://api.github.com/users/" + username + "/repos");
+    return axios.get(USERS_LIST_API + "/" + username + "/repos");
   }
 };

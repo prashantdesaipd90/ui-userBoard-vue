@@ -10,6 +10,8 @@ const state = {
   isErrorInUsersDetails: false,
   isErrorInUsersRepos: false,
   selectedUsersName: "",
+  searchQuery: null,
+  showSearch: false,
 };
 const getters = {};
 const mutations = {
@@ -40,9 +42,15 @@ const mutations = {
   setSelectedUsersName(state, selectedUsersName) {
     state.selectedUsersName = selectedUsersName;
   },
+  setSearchQuery(state, searchQuery) {
+    state.searchQuery = searchQuery;
+  },
+  setShowSearch(state, showSearch) {
+    state.showSearch = showSearch;
+  },
 };
 const actions = {
-  async fetchUsersList({ commit, dispatch }) {
+  async fetchUsersList({ commit }) {
     commit("setIsUsersListLoading", true);
     try {
       const resp = await service.fetchUsersList();
@@ -54,7 +62,7 @@ const actions = {
       commit("setIsUsersListLoading", false);
     }
   },
-  async fetchUsersDetails({ state, commit }, username) {
+  async fetchUsersDetails({ commit }, username) {
     commit("setIsUsersDetailsLoading", true);
     try {
       const resp = await service.fetchUsersDetails(username);
@@ -66,7 +74,7 @@ const actions = {
       commit("setIsUsersDetailsLoading", false);
     }
   },
-  async fetchUsersRepos({ state, commit }, username) {
+  async fetchUsersRepos({ commit }, username) {
     try {
       const resp = await service.fetchUsersRepos(username);
       commit("setUsersRepos", resp.data);

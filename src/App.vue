@@ -1,13 +1,13 @@
 <template>
-  <div id="app" data-test="pokemonApp">
+  <div id="app" data-test="usersApp">
     <header data-test="header">
       <div class="left-panel">
-        <img src="./assets/github.svg" alt="github logo">
+        <a href="/"><img src="./assets/github.svg" alt="github logo"></a>
         <div class="heading">{{ constants.metaData.heading }}</div>
       </div>
-      <div class="right-panel">
+      <div class="right-panel" v-if="showSearch">
         <div class="filter-component">
-          <input class="search-field" tabindex="2" type="text" v-model="userSearchQuery" :placeholder=constants.metaData.search />
+          <input class="search-field" tabindex="2" type="text" @keyup="viewSearch()" v-model="usersSearchQuery" :placeholder=constants.metaData.search />
         </div>
       </div>
     </header>
@@ -15,21 +15,36 @@
       <router-view />
     </div>
     <footer data-test="footer">
-      <img src="./assets/github.svg" alt="github logo">
+      <a href="/"><img src="./assets/github.svg" alt="github logo"></a>
       <div class="copyright-text">&#169; {{ constants.metaData.footer }}</div>
     </footer>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import { constants } from "./lib/constants";
 export default {
   name: "App",
   data: () => {
     return {
-      constants
+      constants,
+      usersSearchQuery: "",
     }
-  }
+  },
+  computed: {
+    ...mapState("UsersStore", [
+      "showSearch"
+    ])
+  },
+  methods: {
+    viewSearch() {
+      this.setSearchQuery(this.usersSearchQuery);
+    },
+    ...mapMutations("UsersStore", [
+      "setSearchQuery"
+    ])
+  },
 }
 </script>
 
@@ -94,8 +109,5 @@ export default {
     .copyright-text {
       margin-top: 20px;
     }
-  }
-  .capitalize {
-    text-transform: capitalize;
   }
 </style>

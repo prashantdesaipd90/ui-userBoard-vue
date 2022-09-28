@@ -1,16 +1,17 @@
 <template>
-  <div class="pokemon-list-wrapper" data-test="pokemonList">
-    <div v-if="isErrorInUsersList" class="pokemon-warnings" data-test="pokemonError">
-      <span>{{ constants.errorInFetchingPokemonList }}</span>
+  <div class="users-list-wrapper" data-test="usersList">
+    <div v-if="isErrorInUsersList" class="users-warnings" data-test="usersError">
+      <span>{{ constants.errorInFetchingUsersList }}</span>
     </div>
-    <div v-if="isUsersListLoading" class="pokemon-warnings" data-test="pokemonLoading">
-      <span><i class="fas fa-spinner fa-spin"></i> {{ constants.pokemonListLoadingMsg }}</span>
+    <div v-if="isUsersListLoading" class="users-warnings" data-test="usersLoading">
+      <span><i class="fas fa-spinner fa-spin"></i> {{ constants.usersListLoadingMsg }}</span>
     </div>
     <UsersList/>
   </div>
 </template>
 
 <script>
+  import { mapMutations } from "vuex";
   import UsersList from '../components/UsersList.vue';
   import { constants } from "../lib/constants";
   import { mapState } from 'vuex';
@@ -25,34 +26,30 @@
         constants
       }
     },
+    created() {
+      this.setShowSearch(true);
+    },
     computed: {
-      ...mapState("PokemonStore", [
-        "isPokemonListLoading",
-        "isErrorInPokemonList"
+      ...mapState("UsersStore", [
+        "isUsersListLoading",
+        "isErrorInUsersList"
+      ])
+    },
+    methods: {
+      ...mapMutations("UsersStore", [
+        "setShowSearch"
       ])
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .pokemon-list-wrapper {
+  .users-list-wrapper {
     width: 100%;
     max-width: calc(100% - 10%);
-    .pokemon-warnings {
-      background: #000000;
-      font-size: 25px;
-      text-align: center;
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      opacity: 0.7;
-      color: #fff;
-      > span {
-        top: 30%;
-        position: relative;
-      }
+    .users-warnings {
+      padding: 50px;
+      font-size: 20px;
     }
   }
 </style>
